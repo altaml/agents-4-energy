@@ -11,9 +11,7 @@ import { applyMode, Mode } from "@cloudscape-design/global-styles";
 import logoSmallTopNavigation from '@/Logo_full.png';
 
 const TopNavBar = () => {
-  // const { signOut, authStatus } = useAuthenticator(context => [context.user, context.authStatus]);
   const { signOut, authStatus } = useAuthenticator(context => [context.user, context.authStatus]);
-  // const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const { userAttributes } = useUserAttributes();
 
@@ -39,10 +37,11 @@ const TopNavBar = () => {
           ...(authStatus === 'authenticated' ? [{
             type: "menu-dropdown" as const,
             text: userAttributes?.email || "Customer Name",
-            // description: userAttributes?.email || "email@example.com",
             iconName: "user-profile" as const,
-            onItemClick: (item: { detail: { id: string } }) => {
-              if (item.detail.id === 'signout') signOut()
+            onItemClick: async (item: { detail: { id: string } }) => {
+              if (item.detail.id === 'signout') {
+                await signOut();
+              }
             },
             items: [
               { id: "signout", text: "Sign out"}

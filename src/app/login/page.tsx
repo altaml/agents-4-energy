@@ -11,11 +11,10 @@ function CustomAuthenticator() {
 
   useEffect(() => {
     if (user) {
-      redirect('/');
+      redirect('/landing');
     }
   }, [user]);
   return <Authenticator/>;
-  // return <Authenticator components={components} />;
 }
 
 // https://docs.amplify.aws/nextjs/build-a-backend/server-side-rendering/nextjs-app-router-server-components/#add-server-authentication-routes

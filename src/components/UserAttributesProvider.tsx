@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { fetchUserAttributes, FetchUserAttributesOutput } from 'aws-amplify/auth';
+import { useAuthenticator } from '@aws-amplify/ui-react';
 
 // Define the type for your context value
 interface UserContextType {
@@ -11,6 +12,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserAttributesProvider({ children }: { children: ReactNode }) {
   const [userAttributes, setUserAttributes] = useState<FetchUserAttributesOutput | null>(null);
+  const { authStatus } = useAuthenticator(context => [context.authStatus]);
 
   useEffect(() => {
     const fetchAttributes = async () => {
@@ -23,8 +25,14 @@ export function UserAttributesProvider({ children }: { children: ReactNode }) {
       }
     };
 
-    fetchAttributes();
-  }, []);
+    // Only fetch user attributes when authenticated
+    if (authStatus === 'authenticated') {
+      fetchAttributes();
+    } else {
+      // Clear user attributes when not authenticated
+      setUserAttributes(null);
+    }
+  }, [authStatus]);
 
   // Pass the object as the value
   return (
