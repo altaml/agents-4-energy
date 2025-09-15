@@ -42,12 +42,7 @@ export default function SignUpForm({ onModeChange, onError, onLoading, onEmailSe
   };
 
   return (
-    <form onSubmit={handleSignUp} className="w-full max-w-[386px] space-y-6">
-      <div className="text-center">
-        <h2 className="text-lg font-semibold text-[#1c2024] mb-2">Create Account</h2>
-        <p className="text-sm text-[rgba(0,7,20,0.62)]">Sign up for Agents4Energy</p>
-      </div>
-      
+    <form onSubmit={handleSignUp} className="w-full max-w-[386px] space-y-6">      
       <div className="space-y-2">
         <label className="block text-sm font-medium text-gray-700">
           Email

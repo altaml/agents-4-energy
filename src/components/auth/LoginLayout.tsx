@@ -6,12 +6,13 @@ import AltaMLLogo from '@/altaml_login.png';
 
 interface LoginLayoutProps {
   children: React.ReactNode;
+  title?: string;
   error?: string;
   success?: string;
   isLoading?: boolean;
 }
 
-export default function LoginLayout({ children, error, success, isLoading }: LoginLayoutProps) {
+export default function LoginLayout({ children, title = "Agents4Energy Login", error, success, isLoading }: LoginLayoutProps) {
   return (
     <div 
       className="min-h-screen flex items-center justify-center p-4"
@@ -23,7 +24,7 @@ export default function LoginLayout({ children, error, success, isLoading }: Log
       }}
     >
       {/* Dialog Container */}
-      <div className="bg-white rounded-xl shadow-2xl max-w-[600px] w-full max-h-[690px] p-8">
+      <div className="bg-white rounded-xl shadow-2xl max-w-[450px] w-full max-h-[690px] p-8">
         <div className="flex flex-col items-center gap-6">
           {/* Logo */}
           <div className="flex flex-col items-center gap-5">
@@ -42,7 +43,7 @@ export default function LoginLayout({ children, error, success, isLoading }: Log
           {/* Heading */}
           <div className="text-center">
             <h1 className="text-2xl font-bold text-[#1c2024] tracking-[-0.1px] leading-[30px]">
-              Agents4Energy Login
+              {title}
             </h1>
           </div>
 

@@ -45,7 +45,6 @@ export default function ConfirmResetPasswordForm({ email, onModeChange, onError,
   return (
     <form onSubmit={handleConfirmResetPassword} className="w-full max-w-[386px] space-y-6">
       <div className="text-center">
-        <h2 className="text-lg font-semibold text-[#1c2024] mb-2">Enter Reset Code</h2>
         <p className="text-sm text-[rgba(0,7,20,0.62)]">Enter the code sent to {email} and your new password</p>
       </div>
       

@@ -70,6 +70,23 @@ export default function Login() {
     setMode(newMode);
   };
 
+  const getTitle = () => {
+    switch (mode) {
+      case 'signIn':
+        return 'Agents4Energy Login';
+      case 'signUp':
+        return 'Sign up for Agents4Energy';
+      case 'forgotPassword':
+        return 'Reset Password';
+      case 'confirmSignUp':
+        return 'Confirm Account';
+      case 'confirmResetPassword':
+        return 'Reset Password';
+      default:
+        return 'Agents4Energy Login';
+    }
+  };
+
   const renderForm = () => {
     switch (mode) {
       case 'signIn':
@@ -124,7 +141,7 @@ export default function Login() {
   };
 
   return (
-    <LoginLayout error={error} success={success} isLoading={isLoading}>
+    <LoginLayout title={getTitle()} error={error} success={success} isLoading={isLoading}>
       {renderForm()}
     </LoginLayout>
   );

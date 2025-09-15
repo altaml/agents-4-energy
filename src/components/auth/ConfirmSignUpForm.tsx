@@ -31,7 +31,6 @@ export default function ConfirmSignUpForm({ email, onModeChange, onError, onLoad
   return (
     <form onSubmit={handleConfirmSignUp} className="w-full max-w-[386px] space-y-6">
       <div className="text-center">
-        <h2 className="text-lg font-semibold text-[#1c2024] mb-2">Confirm Account</h2>
         <p className="text-sm text-[rgba(0,7,20,0.62)]">Enter the confirmation code sent to your email</p>
       </div>
       

@@ -31,12 +31,7 @@ export default function ForgotPasswordForm({ onModeChange, onError, onSuccess, o
   };
 
   return (
-    <form onSubmit={handleForgotPassword} className="w-full max-w-[386px] space-y-6">
-      <div className="text-center">
-        <h2 className="text-lg font-semibold text-[#1c2024] mb-2">Reset Password</h2>
-        <p className="text-sm text-[rgba(0,7,20,0.62)]">Enter your email to receive a password reset link</p>
-      </div>
-      
+    <form onSubmit={handleForgotPassword} className="w-full max-w-[386px] space-y-6">      
       <div className="space-y-2">
         <label className="block text-sm font-medium text-gray-700">
           Email
@@ -57,7 +52,7 @@ export default function ForgotPasswordForm({ onModeChange, onError, onSuccess, o
         type="submit"
         className="w-full h-10 bg-[#00A2C7] text-white font-medium text-base rounded-md hover:bg-[#0797b9] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
-        Send Reset Link
+        Send reset code
       </button>
 
       <button
