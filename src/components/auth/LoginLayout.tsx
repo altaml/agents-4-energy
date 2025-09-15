@@ -1,0 +1,66 @@
+'use client';
+import React from 'react';
+import Image from 'next/image';
+import Pumpjack from '@/pumpjack1_mini.png';
+import AltaMLLogo from '@/altaml_login.png';
+
+interface LoginLayoutProps {
+  children: React.ReactNode;
+  error?: string;
+  isLoading?: boolean;
+}
+
+export default function LoginLayout({ children, error, isLoading }: LoginLayoutProps) {
+  return (
+    <div 
+      className="min-h-screen flex items-center justify-center p-4"
+      style={{
+        backgroundImage: `url(${Pumpjack.src})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'bottom center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      {/* Dialog Container */}
+      <div className="bg-white rounded-xl shadow-2xl max-w-[600px] w-full max-h-[690px] p-8">
+        <div className="flex flex-col items-center gap-6">
+          {/* Logo */}
+          <div className="flex flex-col items-center gap-5">
+            <div className="w-[206px] h-[61px] relative">
+              <Image 
+                src={AltaMLLogo} 
+                alt="AltaML Logo" 
+                fill
+                className="object-contain"
+              />
+            </div>
+          </div>
+
+          {/* Heading */}
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-[#1c2024] tracking-[-0.1px] leading-[30px]">
+              Agents4Energy Login
+            </h1>
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className={`text-sm px-4 py-2 rounded ${error.includes('sent') || error.includes('confirmed') ? 'text-green-600 bg-green-50' : 'text-red-600 bg-red-50'}`}>
+              {error}
+            </div>
+          )}
+
+          {/* Loading Overlay */}
+          {isLoading && (
+            <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center rounded-xl">
+              <div className="text-[#00A2C7]">Loading...</div>
+            </div>
+          )}
+
+          {/* Form Content */}
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
