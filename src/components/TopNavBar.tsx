@@ -1,7 +1,6 @@
 "use client"
 import React from 'react';
 import { useState, useEffect } from "react";
-import { redirect } from 'next/navigation';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { useUserAttributes } from '@/components/UserAttributesProvider';
 import {
@@ -12,9 +11,7 @@ import { applyMode, Mode } from "@cloudscape-design/global-styles";
 import logoSmallTopNavigation from '@/Logo_full.png';
 
 const TopNavBar = () => {
-  // const { signOut, authStatus } = useAuthenticator(context => [context.user, context.authStatus]);
   const { signOut, authStatus } = useAuthenticator(context => [context.user, context.authStatus]);
-  // const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const { userAttributes } = useUserAttributes();
 
@@ -40,7 +37,6 @@ const TopNavBar = () => {
           ...(authStatus === 'authenticated' ? [{
             type: "menu-dropdown" as const,
             text: userAttributes?.email || "Customer Name",
-            // description: userAttributes?.email || "email@example.com",
             iconName: "user-profile" as const,
             onItemClick: async (item: { detail: { id: string } }) => {
               if (item.detail.id === 'signout') {
