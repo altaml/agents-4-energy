@@ -6,7 +6,7 @@ import Grid from "@cloudscape-design/components/grid";
 import Container from "@cloudscape-design/components/container";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Button from "@cloudscape-design/components/button";
-import Pumpjack from '@/pumpjack1.png'; 
+import Pumpjack from '@/pumpjack1_mini.png'; 
 
 export default function Landing() {
   return (
