@@ -6,10 +6,11 @@ interface ConfirmResetPasswordFormProps {
   email: string;
   onModeChange: (mode: 'signIn' | 'forgotPassword' | 'signUp' | 'confirmSignUp' | 'confirmResetPassword') => void;
   onError: (error: string) => void;
+  onSuccess: (message: string) => void;
   onLoading: (loading: boolean) => void;
 }
 
-export default function ConfirmResetPasswordForm({ email, onModeChange, onError, onLoading }: ConfirmResetPasswordFormProps) {
+export default function ConfirmResetPasswordForm({ email, onModeChange, onError, onSuccess, onLoading }: ConfirmResetPasswordFormProps) {
   const [confirmationCode, setConfirmationCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
 
@@ -20,7 +21,7 @@ export default function ConfirmResetPasswordForm({ email, onModeChange, onError,
 
     try {
       await confirmResetPassword({ username: email, confirmationCode, newPassword });
-      onError('Password reset successful! Please sign in with your new password.');
+      onSuccess('Password reset successful! Please sign in with your new password.');
       onModeChange('signIn');
     } catch (err: any) {
       onError(err.message || 'An error occurred during password reset');

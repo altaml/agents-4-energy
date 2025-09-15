@@ -14,6 +14,7 @@ export default function Login() {
   const { user, authStatus } = useAuthenticator((context) => [context.user, context.authStatus]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [mode, setMode] = useState<'signIn' | 'forgotPassword' | 'signUp' | 'confirmSignUp' | 'confirmResetPassword'>('signIn');
   const [userEmail, setUserEmail] = useState('');
 
@@ -62,12 +63,19 @@ export default function Login() {
     );
   }
 
+  // Clear messages when mode changes
+  const handleModeChange = (newMode: typeof mode) => {
+    setError('');
+    setSuccess('');
+    setMode(newMode);
+  };
+
   const renderForm = () => {
     switch (mode) {
       case 'signIn':
         return (
           <SignInForm
-            onModeChange={setMode}
+            onModeChange={handleModeChange}
             onError={setError}
             onLoading={setIsLoading}
           />
@@ -75,7 +83,7 @@ export default function Login() {
       case 'signUp':
         return (
           <SignUpForm
-            onModeChange={setMode}
+            onModeChange={handleModeChange}
             onError={setError}
             onLoading={setIsLoading}
             onEmailSet={setUserEmail}
@@ -84,8 +92,9 @@ export default function Login() {
       case 'forgotPassword':
         return (
           <ForgotPasswordForm
-            onModeChange={setMode}
+            onModeChange={handleModeChange}
             onError={setError}
+            onSuccess={setSuccess}
             onLoading={setIsLoading}
             onEmailSet={setUserEmail}
           />
@@ -94,7 +103,7 @@ export default function Login() {
         return (
           <ConfirmSignUpForm
             email={userEmail}
-            onModeChange={setMode}
+            onModeChange={handleModeChange}
             onError={setError}
             onLoading={setIsLoading}
           />
@@ -103,8 +112,9 @@ export default function Login() {
         return (
           <ConfirmResetPasswordForm
             email={userEmail}
-            onModeChange={setMode}
+            onModeChange={handleModeChange}
             onError={setError}
+            onSuccess={setSuccess}
             onLoading={setIsLoading}
           />
         );
@@ -114,7 +124,7 @@ export default function Login() {
   };
 
   return (
-    <LoginLayout error={error} isLoading={isLoading}>
+    <LoginLayout error={error} success={success} isLoading={isLoading}>
       {renderForm()}
     </LoginLayout>
   );

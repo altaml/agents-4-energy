@@ -5,11 +5,12 @@ import { resetPassword } from 'aws-amplify/auth';
 interface ForgotPasswordFormProps {
   onModeChange: (mode: 'signIn' | 'forgotPassword' | 'signUp' | 'confirmSignUp' | 'confirmResetPassword') => void;
   onError: (error: string) => void;
+  onSuccess: (message: string) => void;
   onLoading: (loading: boolean) => void;
   onEmailSet: (email: string) => void;
 }
 
-export default function ForgotPasswordForm({ onModeChange, onError, onLoading, onEmailSet }: ForgotPasswordFormProps) {
+export default function ForgotPasswordForm({ onModeChange, onError, onSuccess, onLoading, onEmailSet }: ForgotPasswordFormProps) {
   const [email, setEmail] = useState('');
 
   const handleForgotPassword = async (e: React.FormEvent) => {
@@ -20,7 +21,7 @@ export default function ForgotPasswordForm({ onModeChange, onError, onLoading, o
     try {
       await resetPassword({ username: email });
       onEmailSet(email);
-      onError('Password reset code sent to your email');
+      onSuccess('Password reset code sent to your email');
       onModeChange('confirmResetPassword');
     } catch (err: any) {
       onError(err.message || 'An error occurred');

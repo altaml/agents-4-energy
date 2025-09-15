@@ -7,10 +7,11 @@ import AltaMLLogo from '@/altaml_login.png';
 interface LoginLayoutProps {
   children: React.ReactNode;
   error?: string;
+  success?: string;
   isLoading?: boolean;
 }
 
-export default function LoginLayout({ children, error, isLoading }: LoginLayoutProps) {
+export default function LoginLayout({ children, error, success, isLoading }: LoginLayoutProps) {
   return (
     <div 
       className="min-h-screen flex items-center justify-center p-4"
@@ -45,8 +46,15 @@ export default function LoginLayout({ children, error, isLoading }: LoginLayoutP
 
           {/* Error Message */}
           {error && (
-            <div className={`text-sm px-4 py-2 rounded ${error.includes('sent') || error.includes('confirmed') ? 'text-green-600 bg-green-50' : 'text-red-600 bg-red-50'}`}>
+            <div className="text-sm px-4 py-2 rounded text-red-600 bg-red-50">
               {error}
+            </div>
+          )}
+
+          {/* Success Message */}
+          {success && (
+            <div className="text-sm px-4 py-2 rounded text-green-600 bg-green-50">
+              {success}
             </div>
           )}
 
