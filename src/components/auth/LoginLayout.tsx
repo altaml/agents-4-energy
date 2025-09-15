@@ -33,6 +33,7 @@ export default function LoginLayout({ children, error, success, isLoading }: Log
                 alt="AltaML Logo" 
                 fill
                 sizes="206px"
+                priority
                 className="object-contain"
               />
             </div>
