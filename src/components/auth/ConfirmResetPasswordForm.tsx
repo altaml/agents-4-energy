@@ -13,9 +13,21 @@ interface ConfirmResetPasswordFormProps {
 export default function ConfirmResetPasswordForm({ email, onModeChange, onError, onSuccess, onLoading }: ConfirmResetPasswordFormProps) {
   const [confirmationCode, setConfirmationCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+
+  // Real-time password validation
+  const passwordsMatch = confirmNewPassword === '' || newPassword === confirmNewPassword;
+  const showPasswordError = confirmNewPassword !== '' && !passwordsMatch;
 
   const handleConfirmResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Prevent submission if passwords don't match
+    if (!passwordsMatch) {
+      onError('Passwords do not match');
+      return;
+    }
+
     onLoading(true);
     onError('');
 
@@ -65,6 +77,28 @@ export default function ConfirmResetPasswordForm({ email, onModeChange, onError,
           autoComplete="new-password"
           className="w-full h-10 px-3 border border-[rgba(0,9,50,0.12)] rounded-md bg-[rgba(255,255,255,0.9)] text-base placeholder-[rgba(0,5,29,0.45)] focus:outline-none focus:ring-2 focus:ring-[#00A2C7] focus:border-transparent"
         />
+      </div>
+
+      <div className="space-y-2">
+        <label className="block text-sm font-medium text-gray-700">
+          Confirm New Password
+        </label>
+        <input
+          type="password"
+          value={confirmNewPassword}
+          onChange={(e) => setConfirmNewPassword(e.target.value)}
+          placeholder="Confirm new password"
+          required
+          autoComplete="new-password"
+          className={`w-full h-10 px-3 border rounded-md bg-[rgba(255,255,255,0.9)] text-base placeholder-[rgba(0,5,29,0.45)] focus:outline-none focus:ring-2 ${
+            showPasswordError 
+              ? 'border-red-500 focus:ring-red-500 focus:border-red-500' 
+              : 'border-[rgba(0,9,50,0.12)] focus:ring-[#00A2C7] focus:border-transparent'
+          }`}
+        />
+        {showPasswordError && (
+          <p className="text-red-600 text-xs mt-1">Passwords do not match</p>
+        )}
       </div>
 
       <button
