@@ -47,6 +47,7 @@ export default function ConfirmResetPasswordForm({ email, onModeChange, onError,
           onChange={(e) => setConfirmationCode(e.target.value)}
           placeholder="Enter verification code"
           required
+          autoComplete="one-time-code"
           className="w-full h-10 px-3 border border-[rgba(0,9,50,0.12)] rounded-md bg-[rgba(255,255,255,0.9)] text-base placeholder-[rgba(0,5,29,0.45)] focus:outline-none focus:ring-2 focus:ring-[#00A2C7] focus:border-transparent"
         />
       </div>
@@ -61,6 +62,7 @@ export default function ConfirmResetPasswordForm({ email, onModeChange, onError,
           onChange={(e) => setNewPassword(e.target.value)}
           placeholder="Enter new password"
           required
+          autoComplete="new-password"
           className="w-full h-10 px-3 border border-[rgba(0,9,50,0.12)] rounded-md bg-[rgba(255,255,255,0.9)] text-base placeholder-[rgba(0,5,29,0.45)] focus:outline-none focus:ring-2 focus:ring-[#00A2C7] focus:border-transparent"
         />
       </div>
