@@ -3,7 +3,6 @@
 import React, { useEffect } from 'react';
 import { Hub } from 'aws-amplify/utils';
 import TopNavBar from '@/components/TopNavBar';
-// import Box from "@cloudscape-design/components/box";
 
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
