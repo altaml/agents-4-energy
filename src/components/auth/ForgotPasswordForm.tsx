@@ -24,9 +24,10 @@ export default function ForgotPasswordForm({ onModeChange, onLoading, onEmailSet
       onEmailSet(email);
       onModeChange('confirmResetPassword');
       // Keep loading active until mode change completes
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Set form-level error using React state
-      setFormError(err.message || 'An error occurred');
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      setFormError(errorMessage);
       // Only clear loading on error
       onLoading(false);
     }

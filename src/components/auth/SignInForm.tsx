@@ -23,9 +23,10 @@ export default function SignInForm({ onModeChange, onLoading }: SignInFormProps)
       await signIn({ username: email, password });
       // User will be redirected by the parent component
       // Keep loading active until redirect happens
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Set form-level error using React state
-      setFormError(err.message || 'An error occurred during sign in');
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred during sign in';
+      setFormError(errorMessage);
       // Only clear loading on error
       onLoading(false);
     }
@@ -100,7 +101,7 @@ export default function SignInForm({ onModeChange, onLoading }: SignInFormProps)
           onClick={() => onModeChange('signUp')}
           className="text-xs text-[rgba(0,7,20,0.62)] hover:text-[#00A2C7] transition-colors"
         >
-          Don't have an account yet? Register now
+          Don&apos;t have an account yet? Register now
         </button>
       </div>
     </Form.Root>
