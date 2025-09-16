@@ -1,6 +1,6 @@
 'use client';
 import { useAuthenticator } from '@aws-amplify/ui-react';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Hub } from 'aws-amplify/utils';
 import { getCurrentUser, fetchUserAttributes } from 'aws-amplify/auth';
 import LoginLayout from '@/components/auth/LoginLayout';
@@ -11,7 +11,7 @@ import ConfirmSignUpForm from '@/components/auth/ConfirmSignUpForm';
 import ConfirmResetPasswordForm from '@/components/auth/ConfirmResetPasswordForm';
 
 export default function Login() {
-  const { user, authStatus } = useAuthenticator((context) => [context.user, context.authStatus]);
+  const { authStatus } = useAuthenticator((context) => [context.user, context.authStatus]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
