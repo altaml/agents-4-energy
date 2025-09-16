@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { resetPassword } from 'aws-amplify/auth';
 import * as Form from '@radix-ui/react-form';
 
@@ -10,9 +10,11 @@ interface ForgotPasswordFormProps {
 }
 
 export default function ForgotPasswordForm({ onModeChange, onLoading, onEmailSet }: ForgotPasswordFormProps) {
+  const [formError, setFormError] = useState('');
   const handleForgotPassword = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onLoading(true);
+    setFormError(''); // Clear previous errors
 
     const formData = new FormData(event.currentTarget);
     const email = formData.get('email') as string;
@@ -21,15 +23,11 @@ export default function ForgotPasswordForm({ onModeChange, onLoading, onEmailSet
       await resetPassword({ username: email });
       onEmailSet(email);
       onModeChange('confirmResetPassword');
+      // Keep loading active until mode change completes
     } catch (err: any) {
-      // Set form-level error
-      const form = event.currentTarget;
-      const errorElement = form.querySelector('[data-form-error]');
-      if (errorElement) {
-        errorElement.textContent = err.message || 'An error occurred';
-        errorElement.setAttribute('data-valid', 'false');
-      }
-    } finally {
+      // Set form-level error using React state
+      setFormError(err.message || 'An error occurred');
+      // Only clear loading on error
       onLoading(false);
     }
   };
@@ -37,11 +35,11 @@ export default function ForgotPasswordForm({ onModeChange, onLoading, onEmailSet
   return (
     <Form.Root onSubmit={handleForgotPassword} className="w-full max-w-[386px] space-y-6">
       {/* Form-level error message */}
-      <div 
-        data-form-error
-        data-valid="true"
-        className="text-sm px-4 py-2 rounded text-red-600 bg-red-50 hidden data-[valid=false]:block"
-      />
+      {formError && (
+        <div className="text-sm px-4 py-2 rounded text-red-600 bg-red-50">
+          {formError}
+        </div>
+      )}
 
       <Form.Field name="email" className="space-y-2">
         <Form.Label className="block text-sm font-medium text-gray-700">

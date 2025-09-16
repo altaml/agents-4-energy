@@ -45,6 +45,7 @@ export default function Login() {
           const userAttributes = await fetchUserAttributes();
           console.log('Login (signedIn): ', {user, userAttributes});
           console.log('Hub signedIn event - redirecting to landing...');
+          // Keep loading active during redirect for smooth UX
           window.location.href = '/landing';
           break;
         default:
@@ -63,10 +64,11 @@ export default function Login() {
     );
   }
 
-  // Clear messages when mode changes
+  // Clear messages and loading when mode changes
   const handleModeChange = (newMode: typeof mode) => {
     setError('');
     setSuccess('');
+    setIsLoading(false); // Clear loading on mode change
     setMode(newMode);
   };
 

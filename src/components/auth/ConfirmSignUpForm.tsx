@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { confirmSignUp } from 'aws-amplify/auth';
 import * as Form from '@radix-ui/react-form';
 
@@ -10,9 +10,11 @@ interface ConfirmSignUpFormProps {
 }
 
 export default function ConfirmSignUpForm({ email, onModeChange, onLoading }: ConfirmSignUpFormProps) {
+  const [formError, setFormError] = useState('');
   const handleConfirmSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onLoading(true);
+    setFormError(''); // Clear previous errors
 
     const formData = new FormData(event.currentTarget);
     const confirmationCode = formData.get('confirmationCode') as string;
@@ -20,15 +22,11 @@ export default function ConfirmSignUpForm({ email, onModeChange, onLoading }: Co
     try {
       await confirmSignUp({ username: email, confirmationCode });
       onModeChange('signIn');
+      // Keep loading active until mode change completes
     } catch (err: any) {
-      // Set form-level error
-      const form = event.currentTarget;
-      const errorElement = form.querySelector('[data-form-error]');
-      if (errorElement) {
-        errorElement.textContent = err.message || 'An error occurred during confirmation';
-        errorElement.setAttribute('data-valid', 'false');
-      }
-    } finally {
+      // Set form-level error using React state
+      setFormError(err.message || 'An error occurred during confirmation');
+      // Only clear loading on error
       onLoading(false);
     }
   };
@@ -40,11 +38,11 @@ export default function ConfirmSignUpForm({ email, onModeChange, onLoading }: Co
       </div>
 
       {/* Form-level error message */}
-      <div 
-        data-form-error
-        data-valid="true"
-        className="text-sm px-4 py-2 rounded text-red-600 bg-red-50 hidden data-[valid=false]:block"
-      />
+      {formError && (
+        <div className="text-sm px-4 py-2 rounded text-red-600 bg-red-50">
+          {formError}
+        </div>
+      )}
       
       <Form.Field name="confirmationCode" className="space-y-2">
         <Form.Label className="block text-sm font-medium text-gray-700">

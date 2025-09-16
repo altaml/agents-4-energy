@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { signIn } from 'aws-amplify/auth';
 import * as Form from '@radix-ui/react-form';
 
@@ -9,9 +9,11 @@ interface SignInFormProps {
 }
 
 export default function SignInForm({ onModeChange, onLoading }: SignInFormProps) {
+  const [formError, setFormError] = useState('');
   const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onLoading(true);
+    setFormError(''); // Clear previous errors
 
     const formData = new FormData(event.currentTarget);
     const email = formData.get('email') as string;
@@ -20,15 +22,11 @@ export default function SignInForm({ onModeChange, onLoading }: SignInFormProps)
     try {
       await signIn({ username: email, password });
       // User will be redirected by the parent component
+      // Keep loading active until redirect happens
     } catch (err: any) {
-      // Set form-level error
-      const form = event.currentTarget;
-      const errorElement = form.querySelector('[data-form-error]');
-      if (errorElement) {
-        errorElement.textContent = err.message || 'An error occurred during sign in';
-        errorElement.setAttribute('data-valid', 'false');
-      }
-    } finally {
+      // Set form-level error using React state
+      setFormError(err.message || 'An error occurred during sign in');
+      // Only clear loading on error
       onLoading(false);
     }
   };
@@ -36,11 +34,11 @@ export default function SignInForm({ onModeChange, onLoading }: SignInFormProps)
   return (
     <Form.Root onSubmit={handleSignIn} className="w-full max-w-[386px] space-y-6">
       {/* Form-level error message */}
-      <div 
-        data-form-error
-        data-valid="true"
-        className="text-sm px-4 py-2 rounded text-red-600 bg-red-50 hidden data-[valid=false]:block"
-      />
+      {formError && (
+        <div className="text-sm px-4 py-2 rounded text-red-600 bg-red-50">
+          {formError}
+        </div>
+      )}
 
       {/* Email Field */}
       <Form.Field name="email" className="space-y-2">
