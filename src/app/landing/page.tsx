@@ -2,8 +2,6 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import ContentLayout from "@cloudscape-design/components/content-layout";
-import Box from "@cloudscape-design/components/box";
 import Pumpjack from '@/pumpjack1_mini.png';
 import AltaMLLogo from '@/altaml_landing.png';
 
@@ -96,67 +94,66 @@ export default function Landing() {
   ];
 
   return (
-    <ContentLayout
-      defaultPadding
-      disableOverlap
-      headerBackgroundStyle={() =>
-        `bottom center/cover url(${Pumpjack.src})`
-      }
-      header={
-        <Box padding={{ vertical: "xxxl" }}>
-          <div className="backdrop-blur-[5px] backdrop-filter bg-[rgba(255,255,255,0.8)] box-border content-stretch flex flex-col gap-[32px] items-start justify-start pb-[20px] pt-[32px] px-[20px] relative rounded-[8px] max-w-7xl mx-auto">
-            <div aria-hidden="true" className="absolute border border-solid border-white inset-0 pointer-events-none rounded-[8px]" />
-            
-            {/* Header Section */}
-            <div className="content-stretch flex flex-col gap-[8px] items-start justify-start relative shrink-0 w-full">
-              <div className="bg-[rgba(255,255,255,0)] content-stretch flex items-start justify-start relative shrink-0">
-                <h1 className="font-bold leading-[0] relative shrink-0 text-[#1c2024] text-[28px] text-nowrap tracking-[-0.12px]">
-                  <span className="leading-[36px] whitespace-pre">Welcome to Agents4Energy</span>
-                </h1>
-              </div>
-              <div className="bg-[rgba(255,255,255,0)] content-stretch flex items-start justify-start relative shrink-0 w-full">
-                <p className="font-normal leading-[0] relative shrink-0 text-[#60646c] text-[18px] text-nowrap tracking-[-0.04px]">
-                  <span className="leading-[26px] whitespace-pre">Select a specialized agent designed for the energy sector to get help answering your questions.</span>
-                </p>
-              </div>
-            </div>
+    <div 
+      className="min-h-screen flex items-center justify-center p-4"
+      style={{
+        backgroundImage: `url(${Pumpjack.src})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'bottom center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      <div className="backdrop-blur-[5px] backdrop-filter bg-[rgba(255,255,255,0.8)] box-border content-stretch flex flex-col gap-[32px] items-start justify-start pb-[20px] pt-[32px] px-[20px] relative rounded-[8px] max-w-7xl mx-auto w-full">
+        <div aria-hidden="true" className="absolute border border-solid border-white inset-0 pointer-events-none rounded-[8px]" />
+        
+        {/* Header Section */}
+        <div className="content-stretch flex flex-col gap-[8px] items-start justify-start relative shrink-0 w-full">
+          <div className="bg-[rgba(255,255,255,0)] content-stretch flex items-start justify-start relative shrink-0">
+            <h1 className="font-bold leading-[0] relative shrink-0 text-[#1c2024] text-[28px] text-nowrap tracking-[-0.12px]">
+              <span className="leading-[36px] whitespace-pre">Welcome to Agents4Energy</span>
+            </h1>
+          </div>
+          <div className="bg-[rgba(255,255,255,0)] content-stretch flex items-start justify-start relative shrink-0 w-full">
+            <p className="font-normal leading-[0] relative shrink-0 text-[#60646c] text-[18px] text-nowrap tracking-[-0.04px]">
+              <span className="leading-[26px] whitespace-pre">Select a specialized agent designed for the energy sector to get help answering your questions.</span>
+            </p>
+          </div>
+        </div>
 
-            {/* Agent Cards Grid */}
-            <div className="content-stretch flex flex-col gap-[16px] items-start justify-start relative shrink-0 w-full">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[12px] w-full">
-                {agents.map((agent, index) => (
-                  <AgentCard
-                    key={index}
-                    icon={agent.icon}
-                    title={agent.title}
-                    description={agent.description}
-                    onClick={() => handleAgentClick(agent.title)}
-                    isLoading={loadingAgent === agent.title}
-                  />
-                ))}
-              </div>
-              
-              {/* Footer Section */}
-              <div className="content-stretch flex gap-[8px] items-center justify-end relative shrink-0 w-full mt-4">
-                <div className="bg-[rgba(255,255,255,0)] content-stretch flex items-start justify-start relative shrink-0">
-                  <p className="font-normal leading-[0] relative shrink-0 text-[#60646c] text-[14px] text-nowrap">
-                    <span className="leading-[20px] whitespace-pre">Solution brought to you by</span>
-                  </p>
-                </div>
-                <div className="content-stretch flex flex-col gap-[10.603px] items-start justify-center relative shrink-0">
-                  <div className="h-[32px] overflow-clip relative shrink-0">
-                    <img 
-                      alt="AltaML" 
-                      className="block max-w-none h-full object-contain" 
-                      src={AltaMLLogo.src} 
-                    />
-                  </div>
-                </div>
+        {/* Agent Cards Grid */}
+        <div className="content-stretch flex flex-col gap-[16px] items-start justify-start relative shrink-0 w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[12px] w-full">
+            {agents.map((agent, index) => (
+              <AgentCard
+                key={index}
+                icon={agent.icon}
+                title={agent.title}
+                description={agent.description}
+                onClick={() => handleAgentClick(agent.title)}
+                isLoading={loadingAgent === agent.title}
+              />
+            ))}
+          </div>
+          
+          {/* Footer Section */}
+          <div className="content-stretch flex gap-[8px] items-center justify-end relative shrink-0 w-full mt-4">
+            <div className="bg-[rgba(255,255,255,0)] content-stretch flex items-start justify-start relative shrink-0">
+              <p className="font-normal leading-[0] relative shrink-0 text-[#60646c] text-[14px] text-nowrap">
+                <span className="leading-[20px] whitespace-pre">Solution brought to you by</span>
+              </p>
+            </div>
+            <div className="content-stretch flex flex-col gap-[10.603px] items-start justify-center relative shrink-0">
+              <div className="h-[32px] overflow-clip relative shrink-0">
+                <img 
+                  alt="AltaML" 
+                  className="block max-w-none h-full object-contain" 
+                  src={AltaMLLogo.src} 
+                />
               </div>
             </div>
           </div>
-        </Box>
-      }
-    />
+        </div>
+      </div>
+    </div>
   );
 }
