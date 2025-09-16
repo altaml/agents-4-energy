@@ -26,6 +26,7 @@
     "@mui/material": "^6.4.3",
     "@mui/x-data-grid": "^7.22.1",
     "@radix-ui/react-form": "^0.1.8",
+    "@radix-ui/react-hover-card": "^1.1.15",
     "@radix-ui/react-label": "^2.1.7",
     "aws-amplify": "^6.12.2",
     "bedrock-agents-cdk": "^0.0.6",
