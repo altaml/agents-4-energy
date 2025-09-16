@@ -25,9 +25,10 @@ export default function SignUpForm({ onModeChange, onLoading, onEmailSet }: Sign
       onEmailSet(email);
       onModeChange('confirmSignUp');
       // Keep loading active until mode change completes
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Set form-level error using React state
-      setFormError(err.message || 'An error occurred during sign up');
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred during sign up';
+      setFormError(errorMessage);
       // Only clear loading on error
       onLoading(false);
     }

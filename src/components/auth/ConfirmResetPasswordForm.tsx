@@ -24,9 +24,10 @@ export default function ConfirmResetPasswordForm({ email, onModeChange, onLoadin
       await confirmResetPassword({ username: email, confirmationCode, newPassword });
       onModeChange('signIn');
       // Keep loading active until mode change completes
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Set form-level error using React state
-      setFormError(err.message || 'An error occurred during password reset');
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred during password reset';
+      setFormError(errorMessage);
       // Only clear loading on error
       onLoading(false);
     }

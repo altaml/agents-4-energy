@@ -23,9 +23,10 @@ export default function ConfirmSignUpForm({ email, onModeChange, onLoading }: Co
       await confirmSignUp({ username: email, confirmationCode });
       onModeChange('signIn');
       // Keep loading active until mode change completes
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Set form-level error using React state
-      setFormError(err.message || 'An error occurred during confirmation');
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred during confirmation';
+      setFormError(errorMessage);
       // Only clear loading on error
       onLoading(false);
     }
