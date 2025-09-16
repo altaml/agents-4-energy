@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import Image from 'next/image';
-import Pumpjack from '@/pumpjack1_mini.png';
+import Pumpjack from '@/pumpjack_blobs_mini.png';
 import AltaMLLogo from '@/altaml_login.png';
 
 interface LoginLayoutProps {
