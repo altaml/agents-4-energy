@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import Pumpjack from '@/pumpjack1_mini.png';
+import Pumpjack from '@/pumpjack_blobs_mini.png';
 import AltaMLLogo from '@/altaml_landing.png';
 
 // Amplify imports for chat session creation
@@ -103,7 +103,7 @@ export default function Landing() {
         backgroundRepeat: 'no-repeat'
       }}
     >
-      <div className="backdrop-blur-[5px] backdrop-filter bg-[rgba(255,255,255,0.8)] box-border content-stretch flex flex-col gap-[32px] items-start justify-start pb-[20px] pt-[32px] px-[20px] relative rounded-[8px] max-w-7xl mx-auto w-full">
+      <div className="backdrop-blur-[5px] backdrop-filter bg-[rgba(255,255,255,0.85)] box-border content-stretch flex flex-col gap-[32px] items-start justify-start pb-[20px] pt-[32px] px-[20px] relative rounded-[8px] max-w-7xl mx-auto w-full">
         <div aria-hidden="true" className="absolute border border-solid border-white inset-0 pointer-events-none rounded-[8px]" />
         
         {/* Header Section */}
