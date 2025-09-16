@@ -1,106 +1,114 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 import { signUp } from 'aws-amplify/auth';
+import * as Form from '@radix-ui/react-form';
 
 interface SignUpFormProps {
   onModeChange: (mode: 'signIn' | 'forgotPassword' | 'signUp' | 'confirmSignUp' | 'confirmResetPassword') => void;
-  onError: (error: string) => void;
   onLoading: (loading: boolean) => void;
   onEmailSet: (email: string) => void;
 }
 
-export default function SignUpForm({ onModeChange, onError, onLoading, onEmailSet }: SignUpFormProps) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
-  // Real-time password validation
-  const passwordsMatch = confirmPassword === '' || password === confirmPassword;
-  const showPasswordError = confirmPassword !== '' && !passwordsMatch;
-
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Prevent submission if passwords don't match
-    if (!passwordsMatch) {
-      onError('Passwords do not match');
-      return;
-    }
-
+export default function SignUpForm({ onModeChange, onLoading, onEmailSet }: SignUpFormProps) {
+  const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     onLoading(true);
-    onError('');
+
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
 
     try {
       await signUp({ username: email, password });
       onEmailSet(email);
       onModeChange('confirmSignUp');
     } catch (err: any) {
-      onError(err.message || 'An error occurred during sign up');
+      // Set form-level error
+      const form = event.currentTarget;
+      const errorElement = form.querySelector('[data-form-error]');
+      if (errorElement) {
+        errorElement.textContent = err.message || 'An error occurred during sign up';
+        errorElement.setAttribute('data-valid', 'false');
+      }
     } finally {
       onLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSignUp} className="w-full max-w-[386px] space-y-6">      
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">
+    <Form.Root onSubmit={handleSignUp} className="w-full max-w-[386px] space-y-6">
+      {/* Form-level error message */}
+      <div 
+        data-form-error
+        data-valid="true"
+        className="text-sm px-4 py-2 rounded text-red-600 bg-red-50 hidden data-[valid=false]:block"
+      />
+      
+      <Form.Field name="email" className="space-y-2">
+        <Form.Label className="block text-sm font-medium text-gray-700">
           Email
-        </label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="firstname@email.com"
-          required
-          autoComplete="email"
-          className="w-full h-10 px-3 border border-[rgba(0,9,50,0.12)] rounded-md bg-[rgba(255,255,255,0.9)] text-base placeholder-[rgba(0,5,29,0.45)] focus:outline-none focus:ring-2 focus:ring-[#00A2C7] focus:border-transparent"
-        />
-      </div>
+        </Form.Label>
+        <Form.Control asChild>
+          <input
+            type="email"
+            placeholder="firstname@email.com"
+            required
+            autoComplete="email"
+            className="w-full h-10 px-3 border border-[rgba(0,9,50,0.12)] rounded-md bg-[rgba(255,255,255,0.9)] text-base placeholder-[rgba(0,5,29,0.45)] focus:outline-none focus:ring-2 focus:ring-[#00A2C7] focus:border-transparent data-[invalid]:border-red-500 data-[invalid]:focus:ring-red-500"
+          />
+        </Form.Control>
+        <Form.Message match="valueMissing" className="text-red-600 text-xs">
+          Please enter your email address.
+        </Form.Message>
+        <Form.Message match="typeMismatch" className="text-red-600 text-xs">
+          Please enter a valid email address.
+        </Form.Message>
+      </Form.Field>
 
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">
+      <Form.Field name="password" className="space-y-2">
+        <Form.Label className="block text-sm font-medium text-gray-700">
           Password
-        </label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          required
-          autoComplete="new-password"
-          className="w-full h-10 px-3 border border-[rgba(0,9,50,0.12)] rounded-md bg-[rgba(255,255,255,0.9)] text-base placeholder-[rgba(0,5,29,0.45)] focus:outline-none focus:ring-2 focus:ring-[#00A2C7] focus:border-transparent"
-        />
-      </div>
+        </Form.Label>
+        <Form.Control asChild>
+          <input
+            type="password"
+            placeholder="Password"
+            required
+            autoComplete="new-password"
+            className="w-full h-10 px-3 border border-[rgba(0,9,50,0.12)] rounded-md bg-[rgba(255,255,255,0.9)] text-base placeholder-[rgba(0,5,29,0.45)] focus:outline-none focus:ring-2 focus:ring-[#00A2C7] focus:border-transparent data-[invalid]:border-red-500 data-[invalid]:focus:ring-red-500"
+          />
+        </Form.Control>
+        <Form.Message match="valueMissing" className="text-red-600 text-xs">
+          Please enter a password.
+        </Form.Message>
+      </Form.Field>
 
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">
+      <Form.Field name="confirmPassword" className="space-y-2">
+        <Form.Label className="block text-sm font-medium text-gray-700">
           Confirm Password
-        </label>
-        <input
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          placeholder="Confirm password"
-          required
-          autoComplete="new-password"
-          className={`w-full h-10 px-3 border rounded-md bg-[rgba(255,255,255,0.9)] text-base placeholder-[rgba(0,5,29,0.45)] focus:outline-none focus:ring-2 ${
-            showPasswordError 
-              ? 'border-red-500 focus:ring-red-500 focus:border-red-500' 
-              : 'border-[rgba(0,9,50,0.12)] focus:ring-[#00A2C7] focus:border-transparent'
-          }`}
-        />
-        {showPasswordError && (
-          <p className="text-red-600 text-xs mt-1">Passwords do not match</p>
-        )}
-      </div>
+        </Form.Label>
+        <Form.Control asChild>
+          <input
+            type="password"
+            placeholder="Confirm password"
+            required
+            autoComplete="new-password"
+            className="w-full h-10 px-3 border border-[rgba(0,9,50,0.12)] rounded-md bg-[rgba(255,255,255,0.9)] text-base placeholder-[rgba(0,5,29,0.45)] focus:outline-none focus:ring-2 focus:ring-[#00A2C7] focus:border-transparent data-[invalid]:border-red-500 data-[invalid]:focus:ring-red-500"
+          />
+        </Form.Control>
+        <Form.Message match="valueMissing" className="text-red-600 text-xs">
+          Please confirm your password.
+        </Form.Message>
+        <Form.Message match={(value, formData) => {
+          return value !== formData.get('password');
+        }} className="text-red-600 text-xs">
+          Passwords do not match.
+        </Form.Message>
+      </Form.Field>
 
-      <button
-        type="submit"
-        className="w-full h-10 bg-[#00A2C7] text-white font-medium text-base rounded-md hover:bg-[#0797b9] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-      >
+      <Form.Submit className="w-full h-10 bg-[#00A2C7] text-white font-medium text-base rounded-md hover:bg-[#0797b9] disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
         Sign Up
-      </button>
+      </Form.Submit>
 
       <button
         type="button"
@@ -109,6 +117,6 @@ export default function SignUpForm({ onModeChange, onError, onLoading, onEmailSe
       >
         Already have an account? Sign In
       </button>
-    </form>
+    </Form.Root>
   );
 }

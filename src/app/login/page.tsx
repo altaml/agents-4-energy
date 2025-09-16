@@ -93,7 +93,6 @@ export default function Login() {
         return (
           <SignInForm
             onModeChange={handleModeChange}
-            onError={setError}
             onLoading={setIsLoading}
           />
         );
@@ -101,7 +100,6 @@ export default function Login() {
         return (
           <SignUpForm
             onModeChange={handleModeChange}
-            onError={setError}
             onLoading={setIsLoading}
             onEmailSet={setUserEmail}
           />
@@ -110,8 +108,6 @@ export default function Login() {
         return (
           <ForgotPasswordForm
             onModeChange={handleModeChange}
-            onError={setError}
-            onSuccess={setSuccess}
             onLoading={setIsLoading}
             onEmailSet={setUserEmail}
           />
@@ -121,7 +117,6 @@ export default function Login() {
           <ConfirmSignUpForm
             email={userEmail}
             onModeChange={handleModeChange}
-            onError={setError}
             onLoading={setIsLoading}
           />
         );
@@ -130,8 +125,6 @@ export default function Login() {
           <ConfirmResetPasswordForm
             email={userEmail}
             onModeChange={handleModeChange}
-            onError={setError}
-            onSuccess={setSuccess}
             onLoading={setIsLoading}
           />
         );
