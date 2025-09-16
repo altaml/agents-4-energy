@@ -1,32 +1,8 @@
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities; */
-
-/* :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-} */
-
 @use '@cloudscape-design/design-tokens/index.scss' as awsui;
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 .awsui_tabs-header-list_14rmt_1xftp_298.awsui_tabs-header-list_1acwa_dp0cl_5 {
   justify-content: center;
