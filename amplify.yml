@@ -3,23 +3,26 @@ backend:
   phases:
     install:
       commands:
-        - export NVM_DIR="$HOME/.nvm"
+        - echo "Installing NVM and Node.js 20.9.0"
         - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-        - source "$NVM_DIR/nvm.sh"
+        - export NVM_DIR="$HOME/.nvm"
+        - '[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"'
         - nvm install 20.9.0
+        - nvm alias default 20.9.0
         - nvm use 20.9.0
         - node --version
         - npm --version
     preBuild:
       commands:
         - export NVM_DIR="$HOME/.nvm"
-        - source "$NVM_DIR/nvm.sh"
+        - '[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"'
         - nvm use 20.9.0
         - echo "Build environment is $CODEBUILD_BUILD_IMAGE"
+        - node --version
     build:
       commands:
         - export NVM_DIR="$HOME/.nvm"
-        - source "$NVM_DIR/nvm.sh"
+        - '[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"'
         - nvm use 20.9.0
         - node --version
         - npm ci --cache .npm --prefer-offline
@@ -28,25 +31,24 @@ frontend:
   phases:
     install:
       commands:
-        - export NVM_DIR="$HOME/.nvm"
+        - echo "Installing NVM and Node.js 20.9.0 for frontend"
         - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-        - source "$NVM_DIR/nvm.sh"
+        - export NVM_DIR="$HOME/.nvm"
+        - '[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"'
         - nvm install 20.9.0
+        - nvm alias default 20.9.0
         - nvm use 20.9.0
         - node --version
         - npm --version
     build:
       commands:
         - export NVM_DIR="$HOME/.nvm"
-        - source "$NVM_DIR/nvm.sh"
+        - '[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"'
         - nvm use 20.9.0
+        - node --version
         - npm run build
   artifacts:
     baseDirectory: .next
     files:
       - '**/*'
-  cache:
-    paths:
-      - .next/cache/**/*
-      - .npm/**/*
-      - node_modules/**/*
+  
