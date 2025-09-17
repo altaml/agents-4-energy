@@ -5,7 +5,7 @@ backend:
       commands:
         - export NVM_DIR="$HOME/.nvm"
         - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-        - [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        - source "$NVM_DIR/nvm.sh"
         - nvm install 20.9.0
         - nvm use 20.9.0
         - node --version
@@ -13,13 +13,13 @@ backend:
     preBuild:
       commands:
         - export NVM_DIR="$HOME/.nvm"
-        - [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        - source "$NVM_DIR/nvm.sh"
         - nvm use 20.9.0
         - echo "Build environment is $CODEBUILD_BUILD_IMAGE"
     build:
       commands:
         - export NVM_DIR="$HOME/.nvm"
-        - [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        - source "$NVM_DIR/nvm.sh"
         - nvm use 20.9.0
         - node --version
         - npm ci --cache .npm --prefer-offline
@@ -30,7 +30,7 @@ frontend:
       commands:
         - export NVM_DIR="$HOME/.nvm"
         - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-        - [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        - source "$NVM_DIR/nvm.sh"
         - nvm install 20.9.0
         - nvm use 20.9.0
         - node --version
@@ -38,11 +38,15 @@ frontend:
     build:
       commands:
         - export NVM_DIR="$HOME/.nvm"
-        - [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        - source "$NVM_DIR/nvm.sh"
         - nvm use 20.9.0
         - npm run build
   artifacts:
     baseDirectory: .next
     files:
       - '**/*'
-  
+  cache:
+    paths:
+      - .next/cache/**/*
+      - .npm/**/*
+      - node_modules/**/*
