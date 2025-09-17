@@ -4,6 +4,8 @@ backend:
     preBuild:
       commands:
         - echo "Build environment is $CODEBUILD_BUILD_IMAGE"
+        - nvm use 20
+        - node -v
         # - aws ecr-public get-login-password | docker login --username AWS --password-stdin public.ecr.aws
     build:
       commands:
