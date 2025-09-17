@@ -2,8 +2,9 @@ version: 1
 backend:
   phases:
     install:
-      runtime-versions:
-        nodejs: 20
+      commands:
+        # Use nvm to switch to Node.js version 20
+        - nvm use 20
     preBuild:
       commands:
         - echo "Build environment is $CODEBUILD_BUILD_IMAGE"
