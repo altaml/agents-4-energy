@@ -9,7 +9,7 @@ import AltaMLLogo from '@/altaml_landing.png';
 // Amplify imports for chat session creation
 import type { Schema } from '@/../amplify/data/resource';
 import { amplifyClient } from '@/utils/amplify-utils';
-import { defaultAgents, BedrockAgent } from '@/utils/config';
+import { defaultAgents } from '@/utils/config';
 
 // Components
 import AgentCard from '@/components/AgentCard';
