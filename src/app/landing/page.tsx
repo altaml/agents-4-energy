@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import Image from 'next/image';
 import Pumpjack from '@/pumpjack_blobs_mini.png';
 import AltaMLLogo from '@/altaml_landing.png';
 
@@ -144,10 +145,12 @@ export default function Landing() {
             </div>
             <div className="content-stretch flex flex-col gap-[10.603px] items-start justify-center relative shrink-0">
               <div className="h-[32px] overflow-clip relative shrink-0">
-                <img 
+                <Image 
                   alt="AltaML" 
                   className="block max-w-none h-full object-contain" 
-                  src={AltaMLLogo.src} 
+                  src={AltaMLLogo}
+                  width={100}
+                  height={32}
                 />
               </div>
             </div>
