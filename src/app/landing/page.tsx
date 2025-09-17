@@ -49,10 +49,8 @@ export default function Landing() {
       const chatSession: Schema['ChatSession']['createType'] = {
         aiBotInfo: {
           aiBotName: agentInfo.name,
-          aiBotId: agentInfo.source === 'bedrockAgent' 
-            ? (agentInfo as BedrockAgent).agentId 
-            : agentId, // Use actual AWS agent ID for Bedrock agents, config key for others
-          aiBotAliasId: 'agentAliasId' in agentInfo ? agentInfo.agentAliasId : undefined,
+          aiBotId: agentId, // Always use config key for sample prompts lookup
+          aiBotAliasId: undefined, // Don't set this - let ChatBox use fallback logic with explicit IDs
           aiBotVersion: undefined
         }
       };
