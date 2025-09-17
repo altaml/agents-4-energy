@@ -1,4 +1,5 @@
 import * as HoverCard from '@radix-ui/react-hover-card';
+import Image from 'next/image';
 
 interface AgentCardProps {
   icon: string;
@@ -25,7 +26,7 @@ export default function AgentCard({ icon, title, description, onClick, isLoading
                     {isLoading ? (
                       <div className="animate-spin rounded-full h-4 w-4 border-2 border-[#0797b9] border-t-transparent"></div>
                     ) : (
-                      <img alt="" className="block max-w-none size-full" src={icon} />
+                      <Image alt="" className="block max-w-none size-full" src={icon} width={16} height={16} />
                     )}
                   </div>
                 </div>
