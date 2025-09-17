@@ -9,7 +9,7 @@ import AltaMLLogo from '@/altaml_landing.png';
 // Amplify imports for chat session creation
 import type { Schema } from '@/../amplify/data/resource';
 import { amplifyClient } from '@/utils/amplify-utils';
-import { defaultAgents } from '@/utils/config';
+import { defaultAgents, BedrockAgent } from '@/utils/config';
 
 // Components
 import AgentCard from '@/components/AgentCard';
@@ -49,7 +49,9 @@ export default function Landing() {
       const chatSession: Schema['ChatSession']['createType'] = {
         aiBotInfo: {
           aiBotName: agentInfo.name,
-          aiBotId: agentId,
+          aiBotId: agentInfo.source === 'bedrockAgent' 
+            ? (agentInfo as BedrockAgent).agentId 
+            : agentId, // Use actual AWS agent ID for Bedrock agents, config key for others
           aiBotAliasId: 'agentAliasId' in agentInfo ? agentInfo.agentAliasId : undefined,
           aiBotVersion: undefined
         }
