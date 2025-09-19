@@ -24,11 +24,25 @@ For detailed deployment instructions, please see [DEPLOYMENT.md](DEPLOYMENT.md).
 To begin developing in this repo, perform the following steps. These steps are independent of the deployment steps.
 1. Clone the repo
 1. Run `npm install` to install the required packages.
-1. Run `npm run ecrAuth` to authenticate with the AWS ECR repo. This lets you pull lambda build images.
-1. Run `npx ampx sandbox` to create your personal sandbox environment for development.
+1. Run `npm run ecrAuth` to authenticate with the AWS ECR repo. This lets you pull lambda build images (this step is not necessary AFAIK - Phil).
+1. Add the code below to your ~/.aws/config file, and rename ~/.aws/credentials to ~/.aws/credentials_backup if you have a credentials file.
+1. Run `npx ampx sandbox` to create your personal sandbox environment for development (this can take a while the first time you run it. It will be done when you see the line at the end saying "**File written: amplify_outputs.json**").
 1. In a different ternimal run `npm run dev` to start a development server for the front end. You can reach this server by navigating to `localhost:3000` in an internet browser.
 1. Now when you make code changes, they will be deployed to both the front and back end.
 
+### Config file
+```code
+[default]
+region = us-east-2
+sso_session = AltaML
+sso_account_id = 611381832955
+sso_role_name = Agents4Energy
+
+[sso-session AltaML]
+sso_start_url = https://d-9d672be553.awsapps.com/start/#
+sso_region = ca-central-1
+sso_registration_scopes = sso:account:access
+```
 
 ### Limit sign up to certain email addresses
 When a user signs up for an account, the suffix of their email address is checked against an allow list.
