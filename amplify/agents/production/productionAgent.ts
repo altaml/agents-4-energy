@@ -531,7 +531,7 @@ export function productionAgentBuilder(scope: Construct, props: ProductionAgentP
             }),
         ]),
     });
-    // prodTableKbIngestionJobTrigger.node.addDependency(productionAgentTableDefDataSource)
+    prodTableKbIngestionJobTrigger.node.addDependency(productionAgentTableDefDataSource)
     prodTableKbIngestionJobTrigger.node.addDependency(prodDbConfigurator)
 
     //This function will get table definitions from any athena data source with the AgentsForEnergy tag, upload them to s3, and start a knoledge base ingestion job to present them to an agent 
