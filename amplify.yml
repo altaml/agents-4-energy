@@ -21,13 +21,12 @@ backend:
             echo "NVM not found, installing..."
             curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
             export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-            nvm install 20.9.0
-            nvm alias default 20.9.0
           else
             echo "NVM found, sourcing..."
-            source "$NVM_DIR/nvm.sh"
           fi
+          [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+          nvm install 20.9.0
+          nvm alias default 20.9.0
         - nvm use 20.9.0
         - echo "Build environment is $CODEBUILD_BUILD_IMAGE"
         - node --version
@@ -35,6 +34,7 @@ backend:
       commands:
         - export NVM_DIR="$HOME/.nvm"
         - '[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"'
+        - nvm install 20.9.0
         - nvm use 20.9.0
         - node --version
         - npm ci --cache .npm --prefer-offline
@@ -61,15 +61,15 @@ frontend:
             echo "NVM not found, installing..."
             curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
             export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-            nvm install 20.9.0
-            nvm alias default 20.9.0
           else
             echo "NVM found, sourcing..."
-            source "$NVM_DIR/nvm.sh"
           fi
+          [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+          nvm install 20.9.0
+          nvm alias default 20.9.0
         - nvm use 20.9.0
         - node --version
+        - npm ci
         - npm run build
   artifacts:
     baseDirectory: .next
