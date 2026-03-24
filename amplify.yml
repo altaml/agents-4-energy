@@ -13,7 +13,6 @@ frontend:
   phases:
     preBuild:
       commands:
-        - npm install -g n
         - n 20
         - hash -r
         - node --version
