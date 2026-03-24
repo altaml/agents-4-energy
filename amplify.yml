@@ -13,9 +13,9 @@ frontend:
   phases:
     preBuild:
       commands:
-        - source ~/.nvm/nvm.sh
-        - nvm install 20
-        - nvm use 20
+        - npm install -g n
+        - n 20
+        - hash -r
         - node --version
     build:
       commands:
