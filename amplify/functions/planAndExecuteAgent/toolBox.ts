@@ -86,8 +86,9 @@ export const queryGQLToolBuilder = (props: { amplifyClientWrapper: AmplifyClient
                     console.log('Invoke production agent (timeout is expected): ', error)
                 })
 
+                const WAIT_TIMEOUT_MS = 60_000
                 const waitForResponse = async (): Promise<ChatMessage[]> => {
-                    return new Promise((resolve) => {
+                    return new Promise((resolve, reject) => {
                         // Every few seconds check if the most recent chat message has the correct type
                         const interval = setInterval(async () => {
                             const testChatMessages = await amplifyClientWrapper.amplifyClient.graphql({
@@ -112,10 +113,16 @@ export const queryGQLToolBuilder = (props: { amplifyClientWrapper: AmplifyClient
                                     stringify(mostRecentChatMessage)
                                 )
                                 clearInterval(interval)
+                                clearTimeout(timeout)
                                 // resolve(mostRecentChatMessage)
                                 resolve(testChatMessages.data.listChatMessageByChatSessionIdAndCreatedAt.items)
                             }
                         }, 2000)
+
+                        const timeout = setTimeout(() => {
+                            clearInterval(interval)
+                            reject(new Error(`Production agent did not respond within ${WAIT_TIMEOUT_MS / 1000}s`))
+                        }, WAIT_TIMEOUT_MS)
                     })
                 }
 
