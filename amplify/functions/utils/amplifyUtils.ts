@@ -285,16 +285,59 @@ export class AmplifyClientWrapper {
             }
         })
 
+        // Sanitize message history to ensure every AIMessage with tool_calls
+        // is followed by matching ToolMessages. Newer models strictly enforce this.
+        const sanitized: BaseMessage[] = []
+        for (let i = 0; i < messages.length; i++) {
+            const msg = messages[i]
+            if (msg instanceof AIMessage && msg.tool_calls && msg.tool_calls.length > 0) {
+                // Collect the tool_call IDs from this AIMessage
+                const expectedIds = new Set(msg.tool_calls.map((tc: { id?: string }) => tc.id))
+                // Look ahead for matching ToolMessages
+                const foundIds = new Set<string>()
+                for (let j = i + 1; j < messages.length; j++) {
+                    if (messages[j] instanceof ToolMessage) {
+                        const toolMsg = messages[j] as ToolMessage
+                        if (expectedIds.has(toolMsg.tool_call_id)) {
+                            foundIds.add(toolMsg.tool_call_id)
+                        }
+                    } else break // Stop at next non-ToolMessage
+                }
+                if (foundIds.size === expectedIds.size) {
+                    sanitized.push(msg) // All tool_results present, keep as-is
+                } else {
+                    // Strip tool_calls so it becomes a plain text message
+                    console.warn(`Stripping orphaned tool_calls from AIMessage (expected ${expectedIds.size} tool_results, found ${foundIds.size})`)
+                    sanitized.push(new AIMessage({ content: msg.content }))
+                    // Skip the partial ToolMessages that follow
+                    while (i + 1 < messages.length && messages[i + 1] instanceof ToolMessage) {
+                        i++
+                    }
+                }
+            } else if (msg instanceof ToolMessage) {
+                // Only keep ToolMessages that follow an AIMessage with matching tool_calls
+                // (orphaned ToolMessages at the start of history get dropped)
+                const prev = sanitized[sanitized.length - 1]
+                if (prev instanceof AIMessage && prev.tool_calls?.some((tc: { id?: string }) => tc.id === (msg as ToolMessage).tool_call_id)) {
+                    sanitized.push(msg)
+                } else {
+                    console.warn(`Dropping orphaned ToolMessage with tool_call_id: ${(msg as ToolMessage).tool_call_id}`)
+                }
+            } else {
+                sanitized.push(msg)
+            }
+        }
+
         // If the last message is from AI, add the latestHumanMessageText to the end of the messages.
         if (
             props.latestHumanMessageText && (
-                messages.length === 0 || (
-                    messages[messages.length - 1] &&
-                    !(messages[messages.length - 1] instanceof HumanMessage)
+                sanitized.length === 0 || (
+                    sanitized[sanitized.length - 1] &&
+                    !(sanitized[sanitized.length - 1] instanceof HumanMessage)
                 )
             )
         ) {
-            messages.push(
+            sanitized.push(
                 new HumanMessage({
                     content: props.latestHumanMessageText,
                 })
@@ -303,9 +346,9 @@ export class AmplifyClientWrapper {
             console.log('Last message in query is a human message')
         }
 
-        // console.log("mesages in langchain form: ", messages)
+        // console.log("mesages in langchain form: ", sanitized)
         // return messages
-        this.chatMessages = messages
+        this.chatMessages = sanitized
         // }
 
     }
