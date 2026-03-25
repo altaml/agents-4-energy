@@ -44,7 +44,6 @@ export function maintenanceAgentBuilder(scope: Construct, props: AgentProps) {
     // Agent-specific tags
     const maintTags = {
         Agent: 'Maintenance',
-        Model: foundationModel
     }
 
     const bedrockAgentRole = new iam.Role(scope, 'BedrockAgentRole', {
@@ -368,6 +367,10 @@ export function maintenanceAgentBuilder(scope: Construct, props: AgentProps) {
 
     // Add tags to all resources in this scope
     cdk.Tags.of(scope).add('Agent', maintTags.Agent);
+    // Pin the Model tag to the original value to avoid OpenSearch collection replacement.
+    // Changing tags on OpenSearchServerless::Collection triggers CloudFormation replacement,
+    // which fails because the collection has a custom name.
+    cdk.Tags.of(scope).add('Model', 'anthropic.claude-sonnet-4-20250514-v1:0');
 
     //Add an agent alias to make the agent callable
     const maintenanceAgentAlias = new bedrock.CfnAgentAlias(scope, 'maintenance-agent-alias', {
