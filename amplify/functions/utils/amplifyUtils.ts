@@ -285,38 +285,42 @@ export class AmplifyClientWrapper {
             }
         })
 
-        // Sanitize message history to ensure every AIMessage with tool_calls
-        // is followed by matching ToolMessages. Newer models strictly enforce this.
+        // Sanitize message history for Anthropic API compliance:
+        // Every AIMessage with tool_calls must be followed by ToolMessages with matching IDs,
+        // and then the next message must be a HumanMessage (or end of history).
+        // Any stale tool sequences (e.g. from failed retries) corrupt the conversation.
         const sanitized: BaseMessage[] = []
         for (let i = 0; i < messages.length; i++) {
             const msg = messages[i]
             if (msg instanceof AIMessage && msg.tool_calls && msg.tool_calls.length > 0) {
-                // Collect the tool_call IDs from this AIMessage
                 const expectedIds = new Set(msg.tool_calls.map((tc: { id?: string }) => tc.id))
-                // Look ahead for matching ToolMessages
+                // Look ahead: collect matching ToolMessages
+                let j = i + 1
                 const foundIds = new Set<string>()
-                for (let j = i + 1; j < messages.length; j++) {
-                    if (messages[j] instanceof ToolMessage) {
-                        const toolMsg = messages[j] as ToolMessage
-                        if (expectedIds.has(toolMsg.tool_call_id)) {
-                            foundIds.add(toolMsg.tool_call_id)
-                        }
-                    } else break // Stop at next non-ToolMessage
+                while (j < messages.length && messages[j] instanceof ToolMessage) {
+                    const toolMsg = messages[j] as ToolMessage
+                    if (expectedIds.has(toolMsg.tool_call_id)) {
+                        foundIds.add(toolMsg.tool_call_id)
+                    }
+                    j++
                 }
-                if (foundIds.size === expectedIds.size) {
-                    sanitized.push(msg) // All tool_results present, keep as-is
+                // Check: all tool_results present AND next message after tools is HumanMessage or end
+                const allToolsPresent = foundIds.size === expectedIds.size
+                const nextAfterTools = messages[j]
+                const nextIsValid = !nextAfterTools || nextAfterTools instanceof HumanMessage
+                if (allToolsPresent && nextIsValid) {
+                    sanitized.push(msg) // Keep the AIMessage with tool_calls
                 } else {
-                    // Strip tool_calls so it becomes a plain text message
-                    console.warn(`Stripping orphaned tool_calls from AIMessage (expected ${expectedIds.size} tool_results, found ${foundIds.size})`)
+                    // Strip the entire tool sequence — it's stale or incomplete
+                    console.warn(`Stripping tool sequence from AIMessage (tools present: ${foundIds.size}/${expectedIds.size}, next valid: ${nextIsValid})`)
                     sanitized.push(new AIMessage({ content: msg.content }))
-                    // Skip the partial ToolMessages that follow
+                    // Skip all following ToolMessages
                     while (i + 1 < messages.length && messages[i + 1] instanceof ToolMessage) {
                         i++
                     }
                 }
             } else if (msg instanceof ToolMessage) {
-                // Only keep ToolMessages that follow an AIMessage with matching tool_calls
-                // (orphaned ToolMessages at the start of history get dropped)
+                // Only keep ToolMessages that directly follow a kept AIMessage with matching tool_calls
                 const prev = sanitized[sanitized.length - 1]
                 if (prev instanceof AIMessage && prev.tool_calls?.some((tc: { id?: string }) => tc.id === (msg as ToolMessage).tool_call_id)) {
                     sanitized.push(msg)
