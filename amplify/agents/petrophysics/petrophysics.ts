@@ -148,7 +148,6 @@ export function petrophysicsAgentBuilder(scope: Construct, props: AgentProps) {
     // ===== TAGS =====
     // Add tags to all resources in this scope
     cdk.Tags.of(scope).add('Agent', agentTags.Agent);
-    cdk.Tags.of(scope).add('Model', agentTags.Model);
 
     // ===== OUTPUTS =====
     // Add CloudFormation outputs

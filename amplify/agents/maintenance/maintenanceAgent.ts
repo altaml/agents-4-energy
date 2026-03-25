@@ -368,7 +368,6 @@ export function maintenanceAgentBuilder(scope: Construct, props: AgentProps) {
 
     // Add tags to all resources in this scope
     cdk.Tags.of(scope).add('Agent', maintTags.Agent);
-    cdk.Tags.of(scope).add('Model', maintTags.Model);
 
     //Add an agent alias to make the agent callable
     const maintenanceAgentAlias = new bedrock.CfnAgentAlias(scope, 'maintenance-agent-alias', {
