@@ -184,7 +184,7 @@ export const handler: Schema["invokePlanAndExecuteAgent"]["functionHandler"] = a
             `For the given objective, come up with a simple step by step plan.
             This plan should involve individual tasks, that if executed correctly will yield the correct answer. Do not add any superfluous steps.
             The result of the final step should be the final answer. Make sure that each step has all the information needed - do not skip steps.
-            Favor assigning the role of ai to human if an available tool may be able to resolve the step.
+            Favor assigning the role of ai over human if an available tool may be able to resolve the step.
 
             Your objective was this:
             {objective}
