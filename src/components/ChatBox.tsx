@@ -356,45 +356,51 @@ const ChatBox: React.FC<ChatBoxProps> = (props: ChatBoxProps) => {
         setIsGenAiResponseLoading(true);
         // await addChatMessage({ body: prompt, role: "human" })
 
-        if (chatSession?.aiBotInfo?.aiBotAliasId) {
-            await invokeBedrockAgentParseBodyGetTextAndTrace({ prompt: prompt, chatSession: chatSession })
-            // if (!response) throw new Error("No response from agent");
-        } else {
+        try {
+            if (chatSession?.aiBotInfo?.aiBotAliasId) {
+                await invokeBedrockAgentParseBodyGetTextAndTrace({ prompt: prompt, chatSession: chatSession })
+                // if (!response) throw new Error("No response from agent");
+            } else {
 
-            const selectedDefaultAgentKey = Object.keys(defaultAgents).find(key =>
-                defaultAgents[key].name === chatSession?.aiBotInfo?.aiBotName
-            );
-            const selectedDefaultAgent = selectedDefaultAgentKey ? defaultAgents[selectedDefaultAgentKey] : null;
+                const selectedDefaultAgentKey = Object.keys(defaultAgents).find(key =>
+                    defaultAgents[key].name === chatSession?.aiBotInfo?.aiBotName
+                );
+                const selectedDefaultAgent = selectedDefaultAgentKey ? defaultAgents[selectedDefaultAgentKey] : null;
 
-            if (!selectedDefaultAgent) throw new Error("No default agent selected");
-            if (!chatSession) throw new Error("No active chat session");
+                if (!selectedDefaultAgent) throw new Error("No default agent selected");
+                if (!chatSession) throw new Error("No active chat session");
 
-            switch (selectedDefaultAgent.source) {
-                case "bedrockAgent":
-                    await addChatMessage({ body: prompt, role: "human" })
-                    await invokeBedrockAgentParseBodyGetTextAndTrace({
-                        prompt: prompt,
-                        chatSession: chatSession,
-                        agentAliasId: (selectedDefaultAgent as BedrockAgent).agentAliasId,
-                        agentId: (selectedDefaultAgent as BedrockAgent).agentId,
-                    })
-                    break;
-                case "graphql":
-                    await addChatMessage({ body: prompt, role: "human" })
-                    switch (selectedDefaultAgent.name) {
-                        case defaultAgents.PlanAndExecuteAgent.name:
-                            await amplifyClient.queries.invokePlanAndExecuteAgent({ lastMessageText: prompt, chatSessionId: chatSession.id })
-                            break;
-                        default:
-                            throw new Error("No Agent Configured");
-                            break;
-                    }
-                    break;
-                default:
-                    throw new Error("No Agent Configured");
-                    break;
+                switch (selectedDefaultAgent.source) {
+                    case "bedrockAgent":
+                        await addChatMessage({ body: prompt, role: "human" })
+                        await invokeBedrockAgentParseBodyGetTextAndTrace({
+                            prompt: prompt,
+                            chatSession: chatSession,
+                            agentAliasId: (selectedDefaultAgent as BedrockAgent).agentAliasId,
+                            agentId: (selectedDefaultAgent as BedrockAgent).agentId,
+                        })
+                        break;
+                    case "graphql":
+                        await addChatMessage({ body: prompt, role: "human" })
+                        switch (selectedDefaultAgent.name) {
+                            case defaultAgents.PlanAndExecuteAgent.name:
+                                await amplifyClient.queries.invokePlanAndExecuteAgent({ lastMessageText: prompt, chatSessionId: chatSession.id })
+                                break;
+                            default:
+                                throw new Error("No Agent Configured");
+                                break;
+                        }
+                        break;
+                    default:
+                        throw new Error("No Agent Configured");
+                        break;
 
+                }
             }
+        } catch (error) {
+            console.error('sendMessageToChatBot error (agent may still be processing):', error)
+        } finally {
+            setIsGenAiResponseLoading(false);
         }
     }
 
