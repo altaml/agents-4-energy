@@ -257,6 +257,15 @@ export class AmplifyClientWrapper {
             ? []
             : sortedMessages.slice(firstHumanMessageIndex);
 
+        // Truncate long message content for model context to reduce token usage.
+        // Full content stays in the DB for UI display — this only affects what's sent to the LLM.
+        const MAX_TOOL_CONTENT_LENGTH = 500
+        const MAX_AI_CONTENT_LENGTH = 1000
+        function truncateForModel(content: string, maxLength: number): string {
+            if (content.length <= maxLength) return content
+            return content.substring(0, maxLength) + `\n... [truncated, ${content.length - maxLength} chars omitted]`
+        }
+
         //Here we're using the last 20 messages for memory
         const messages: BaseMessage[] = sortedMessagesStartingWithHumanMessage.map((message) => {
             if (message.role === 'human') {
@@ -269,7 +278,7 @@ export class AmplifyClientWrapper {
                 return new AIMessage({
                     content: [{
                         type: 'text',
-                        text: message.content
+                        text: truncateForModel(message.content, MAX_AI_CONTENT_LENGTH)
                     }],
                     // content: JSON.parse(message.contentBlocks),
                     tool_calls: JSON.parse(message.tool_calls || '[]')
@@ -277,7 +286,7 @@ export class AmplifyClientWrapper {
             } else {
                 // if (!message.contentBlocks) throw new Error(`No contentBlocks in message: ${message}`);
                 return new ToolMessage({
-                    content: message.content,
+                    content: truncateForModel(message.content, MAX_TOOL_CONTENT_LENGTH),
                     // content: JSON.parse(message.contentBlocks),
                     tool_call_id: message.tool_call_id || "",
                     name: message.tool_name || ""
