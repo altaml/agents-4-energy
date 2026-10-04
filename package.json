@@ -39,7 +39,7 @@
     "date-fns": "^4.1.0",
     "graphql-tag": "^2.12.6",
     "jsonschema": "^1.4.1",
-    "next": "^14.2.23",
+    "next": "^16.3.8",
     "pdf-lib": "^1.17.1",
     "react": "^18",
     "react-chartjs-2": "^5.2.0",
@@ -51,7 +51,7 @@
     "recharts": "^2.13.3",
     "remark-gfm": "^4.0.0",
     "sass": "^1.79.4",
-    "sharp": "^0.33.5",
+    "sharp": "^0.35.5",
     "yaml": "^2.7.0"
   },
   "devDependencies": {
@@ -74,7 +74,7 @@
     "@types/react": "^18.3.24",
     "@types/react-dom": "^18.3.7",
     "aws-cdk": "^2.175.1",
-    "aws-cdk-lib": "^2.189.1",
+    "aws-cdk-lib": "^2.272.0",
     "aws-sdk": "^2.1691.0",
     "constructs": "^10.4.2",
     "esbuild": "^0.25.2",
